@@ -5,6 +5,7 @@ const json = require('koa-json')
 const onerror = require('koa-onerror')
 const koaBody = require('koa-body')
 const logger = require('koa-logger')
+const path = require('path')
 
 const index = require('./src/routes/index')
 const users = require('./src/routes/users')
@@ -18,7 +19,7 @@ app.use(
     multipart: true,    //解析多个文件
     formidable: {
       maxFileSize: 100 * 1024 * 1024,    // 设置上传文件大小最大限制，默认2M
-      //uploadDir: 可以填写一个路径，不填写默认为 os.tmpDir()
+      keepExtensions: true, // 保持文件的后缀
     }
   })
 )

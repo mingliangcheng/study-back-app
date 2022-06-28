@@ -1,13 +1,22 @@
 const router = require('koa-router')()
+const { saveFile, download } = require('../controller/upload')
 
 router.prefix('/users')
 
-router.get('/', function (ctx, next) {
-  ctx.body = 'this is a users response!'
+router.post('/uploadAvatar', async (ctx, next) => {
+  const file = ctx.request.files.avatar
+  const { name, size, path, type } = file
+  ctx.body = await saveFile({
+    filePath: path,
+    name,
+    size,
+    type
+  })
 })
 
-router.get('/bar', function (ctx, next) {
-  ctx.body = 'this is a users/bar response'
+router.get('/download', async (ctx, next) => {
+  const { fileName } = ctx.query
+  await download(ctx, fileName)
 })
 
 module.exports = router
