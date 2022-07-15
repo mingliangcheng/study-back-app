@@ -7,9 +7,9 @@ const seq = new Sequelize(database, user, password, {
 })
 
 // 测试连接
-seq.authenticate().then(() => {
-  console.log('连接成功');
-}).catch(e => {
-  console.log(e);
-})
-// export default seq
+// seq.authenticate().then(() => {
+//   console.log('连接成功');
+// }).catch(e => {
+//   console.log(e);
+// })
+module.exports = seq
