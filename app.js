@@ -12,6 +12,7 @@ const users = require('./src/routes/users')
 const cors = require('koa2-cors')
 const koaJwt = require('koa-jwt')
 const { PRIVATE_KEYS } = require('./src/conf/KEYS')
+const { accessLogger, logger: log } = require('./src/middlewares/log')
 
 // error handler
 onerror(app)
@@ -41,6 +42,14 @@ app.use(async (ctx, next) => {
   const ms = new Date() - start
   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
 })
+
+app.use(accessLogger());
+app.on('error', (err, ctx) => {
+  console.error('server error', err, ctx)
+  log.error(err)
+});
+
+
 app.use(cors({
   exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
   maxAge: 5,

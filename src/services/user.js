@@ -166,6 +166,14 @@ class UserService {
     return result
   }
 
+  /**
+   * @description 更新用户信息
+   * @param {string} userName 用户名
+   * @param {string} nickName 昵称
+   * @param {number} age 年龄
+   * @param {string} hobby 爱好
+   * @returns 
+   */
   async updateUserInfo ({ userName, nickName, age, hobby }) {
     const result = await User.update({
       userName,
