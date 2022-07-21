@@ -11,8 +11,11 @@ const index = require('./src/routes/index')
 const users = require('./src/routes/users')
 const cors = require('koa2-cors')
 const koaJwt = require('koa-jwt')
+const session = require('koa-generic-session')
+const redisStore = require('koa-redis')
 const { PRIVATE_KEYS } = require('./src/conf/KEYS')
 const { accessLogger, logger: log } = require('./src/middlewares/log')
+const { REDIS_CONF } = require('./src/conf/redis_conf')
 
 // error handler
 onerror(app)
@@ -44,10 +47,7 @@ app.use(async (ctx, next) => {
 })
 
 app.use(accessLogger());
-app.on('error', (err, ctx) => {
-  console.error('server error', err, ctx)
-  log.error(err)
-});
+
 
 
 app.use(cors({
@@ -72,10 +72,24 @@ app.use((ctx, next) => {
     }
   })
 })
-app.use(koaJwt({
-  secret: PRIVATE_KEYS
-}).unless({
-  path: [/\/users\/login/, /\/users\/register/]
+// app.use(koaJwt({
+//   secret: PRIVATE_KEYS
+// }).unless({
+//   path: [/\/users\/login/, /\/users\/register/]
+// }))
+
+app.keys = ['kadKNK@#kk']
+app.use(session({
+  key: 'study.id',
+  prefix: 'study.sess:',
+  cookie: {
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000,
+    path: '/'
+  },
+  store: redisStore({
+    all: `${REDIS_CONF.host}:${REDIS_CONF.port}`
+  })
 }))
 // routes
 app.use(index.routes(), index.allowedMethods())
@@ -84,6 +98,10 @@ app.use(users.routes(), users.allowedMethods())
 // error-handling
 app.on('error', (err, ctx) => {
   console.error('server error', err, ctx)
+});
+app.on('error', (err, ctx) => {
+  console.error('server error', err, ctx)
+  log.error(err)
 });
 
 module.exports = app

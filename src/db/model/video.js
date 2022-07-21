@@ -3,6 +3,7 @@
  */
 const seq = require('../seq')
 const Sequelize = require('sequelize')
+const { SortVideo } = require('./sortVideo')
 const Video = seq.define('video', {
   videoId: {
     type: Sequelize.INTEGER,
@@ -40,6 +41,14 @@ const Video = seq.define('video', {
     allowNull: true,
     comments: '点赞数'
   }
+})
+SortVideo.hasMany(Video, {
+  foreignKey: 'sortId',
+  targetKey: 'id'
+})
+Video.belongsTo(SortVideo, {
+  foreignKey: 'sortId',
+  targetKey: 'id'
 })
 module.exports = {
   Video

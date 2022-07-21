@@ -3,6 +3,7 @@
  */
 const seq = require('../seq')
 const Sequelize = require('sequelize')
+const { Video } = require('./video')
 
 const User = seq.define('user', {
   userId: {
@@ -31,6 +32,16 @@ const User = seq.define('user', {
     type: Sequelize.STRING,
     allowNull: true
   }
+})
+
+User.hasMany(Video, {
+  foreignKey: 'uploadId',
+  targetKey: 'userId'
+})
+
+Video.belongsTo(User, {
+  foreignKey: 'uploadId',
+  targetKey: 'userId'
 })
 
 module.exports = {

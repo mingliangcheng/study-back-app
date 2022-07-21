@@ -33,6 +33,11 @@ async function saveFile ({ name, filePath, type, size }) {
   })
 }
 
+/**
+ * @description 文件下载
+ * @param {object} ctx 
+ * @param {string} name 文件名
+ */
 async function download (ctx, name) {
   const path = `/uploadFiles/${name}`
   ctx.attachment(path)

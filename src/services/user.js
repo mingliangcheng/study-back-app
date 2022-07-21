@@ -1,6 +1,7 @@
 const { User } = require('../db/model/user')
 const { Video } = require('../db/model/video')
 const { SortVideo } = require('../db/model/sortVideo')
+const { Op } = require('sequelize')
 class UserService {
   /**
    * @description 根据用户名查询用户信息
@@ -120,7 +121,8 @@ class UserService {
    * @param {number} uploadId 
    */
   async selectVideoBySortId ({ sortId, pageNum, pageSize, uploadId }) {
-    const opt = {}
+    const opt = {
+    }
     if (sortId) {
       Object.assign(opt, {
         sortId
@@ -135,6 +137,16 @@ class UserService {
       attributes: ['videoId', 'title', 'url', 'cover_img', 'uploadId', 'sortId', 'likeNum'],
       order: [
         ['videoId', 'asc']
+      ],
+      include: [
+        {
+          model: User,
+          attributes: ['userId', 'userName'],
+        },
+        {
+          model: SortVideo,
+          attributes: ['id', 'sortName'],
+        }
       ],
       limit: Number(pageSize),
       offset: (Number(pageNum) - 1) * pageSize,

@@ -1,4 +1,5 @@
 const router = require('koa-router')()
+const crossEnv = require('cross-env');
 const { saveFile, download } = require('../controller/upload')
 const { registerUser, uploadVideo, addVideoSort, getVideoInfoBySortId, login, modifyPassword, modifyUserInfo } = require('../controller/user')
 const sm2 = require('sm-crypto').sm2;
@@ -127,6 +128,7 @@ router.get('/getVideoBySortId', async (ctx, next) => {
 router.post('/login', async (ctx, next) => {
   const { userName, password } = ctx.request.body
   ctx.body = await login(userName, password)
+  ctx.session.userInfo = await login(userName, password)
 })
 
 // 修改密码
